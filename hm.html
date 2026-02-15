@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌙 Ramadan Quiz Challenge - 29 Days Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #ffd700 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255,215,0,0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Timer Styles */
+        .timer-container {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .timer {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: inline-block;
+            font-size: 24px;
+            font-weight: bold;
+            border: 2px solid #ffd700;
+            color: #ffd700;
+            transition: all 0.3s ease;
+        }
+
+        .timer.warning {
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+            animation: pulse 1s infinite;
+            background: rgba(220, 53, 69, 0.2);
+        }
+
+        .timer.expired {
+            border-color: #dc3545;
+            color: #dc3545;
+            background: rgba(220, 53, 69, 0.3);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px #ff6b6b; }
+            100% { transform: scale(1); }
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border: 1px solid #ffd700;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Day Counter */
+        .day-counter {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 24px;
+            background: rgba(255, 215, 0, 0.2);
+            padding: 15px;
+            border-radius: 50px;
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .day-number {
+            font-weight: bold;
+            color: #ffd700;
+            font-size: 32px;
+        }
+
+        /* Login Section */
+        .login-section {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .login-section h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 16px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .login-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            color: #333;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* User Info */
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .user-badge {
+            background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            color: #333;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #dc3545 100%);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Tab Navigation */
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+
+        .tab:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* Quiz Section */
+        .quiz-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .score-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .mark-badge {
+            background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            color: #333;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            line-height: 1.6;
+            border-left: 4px solid #ffd700;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #ffd700;
+        }
+
+        .option.selected {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Leaderboard Styles */
+        .leaderboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+
+        .day-section {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .date-section {
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+
+        .leaderboard-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #ffd700;
+        }
+
+        .delete-name-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #dc3545 100%);
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .delete-name-btn:hover {
+            background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+            transform: scale(1.05);
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .admin-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .admin-input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .admin-input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .admin-btn {
+            background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            color: #333;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .admin-btn.danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #dc3545 100%);
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        /* Warning Message */
+        .warning-message {
+            background: rgba(255, 0, 0, 0.2);
+            border: 2px solid #ff6b6b;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+            color: #ff6b6b;
+            font-weight: bold;
+            animation: pulse 1s infinite;
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .tab-container {
+                flex-direction: column;
+            }
+            
+            .leaderboard-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Timer -->
+        <div class="timer-container">
+            <div class="timer" id="timer">
+                <i>⏰</i> <span id="timerDisplay">30:00</span>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <h1>🌙 Ramadan Quiz Challenge</h1>
+            <p>29 Days • 1 Quiz Per Day • 1 Mark Per Question</p>
+        </div>
+
+        <!-- Login Section -->
+        <div id="loginSection" class="login-section">
+            <h2>🔐 Login to Start Quiz</h2>
+            <input type="text" id="loginName" class="login-input" placeholder="Enter Your Name" value="Guest User">
+            <input type="password" id="adminPassword" class="login-input" placeholder="Admin Password">
+            <button class="login-btn" onclick="handleUserLogin()">👤 Login as User</button>
+            <button class="login-btn" onclick="handleAdminLogin()">👑 Login as Admin</button>
+        </div>
+
+        <!-- Main App (Hidden until login) -->
+        <div id="mainApp" class="hidden">
+            <!-- User Info -->
+            <div class="user-info">
+                <div>
+                    <span id="displayName"></span>
+                    <span id="adminBadge" class="user-badge hidden">Admin</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+
+            <!-- Day Counter -->
+            <div class="day-counter" id="dayCounter">
+                <span>🌙 Ramadan Day </span>
+                <span class="day-number" id="currentDayNumber">1</span>
+                <span> / 29</span>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tab-container">
+                <div class="tab active" onclick="switchTab('quiz')">📝 Quiz</div>
+                <div class="tab" onclick="switchTab('leaderboard')">🏆 Leaderboard</div>
+                <div id="adminTab" class="tab hidden" onclick="switchTab('admin')">⚙️ Admin Panel</div>
+            </div>
+
+            <!-- Quiz Section -->
+            <div id="quizSection" class="quiz-section section active">
+                <!-- Warning if already taken today -->
+                <div id="alreadyTakenWarning" class="warning-message hidden">
+                    ⚠️ You have already taken today's quiz. Come back tomorrow for Day <span id="nextDayNumber">2</span>!
+                </div>
+
+                <div class="score-board">
+                    <div class="score-item">
+                        <div class="score-value" id="currentScore">0</div>
+                        <div class="score-label">Today's Score</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-value" id="questionCount">1/10</div>
+                        <div class="score-label">Question</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-value" id="totalScore">0</div>
+                        <div class="score-label">Total (29 Days)</div>
+                    </div>
+                </div>
+
+                <!-- Mark Badge -->
+                <div class="mark-badge">
+                    ⚡ This Question: 1 Mark
+                </div>
+
+                <div class="question-text" id="questionText">
+                    Loading question...
+                </div>
+
+                <div class="options" id="optionsContainer">
+                    <!-- Options will be inserted here -->
+                </div>
+
+                <button class="admin-btn" onclick="submitAnswer()" id="submitBtn">Submit Answer</button>
+                <button class="admin-btn hidden" onclick="nextQuestion()" id="nextBtn">Next Question →</button>
+            </div>
+
+            <!-- Leaderboard Section -->
+            <div id="leaderboardSection" class="quiz-section section">
+                <!-- Day and Date -->
+                <div class="leaderboard-header">
+                    <div class="day-section" id="currentDay">Day 1</div>
+                    <div class="date-section" id="currentDate">1 Ramadan 1445</div>
+                </div>
+
+                <h3>🏆 Today's Leaders (Day <span id="leaderboardDay">1</span>)</h3>
+                <div id="todayLeaderboard"></div>
+
+                <h3 style="margin-top: 20px;">📅 Previous Days (1-29)</h3>
+                <div id="previousLeaderboard"></div>
+
+                <!-- Save Score Section (Only visible if user hasn't taken today's quiz) -->
+                <div id="saveScoreSection" style="margin-top: 20px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                    <h4>💾 Save Your Score for Day <span id="saveDay">1</span></h4>
+                    <button class="admin-btn" onclick="saveScore()">Save My Score</button>
+                    <p style="font-size: 14px; margin-top: 10px; opacity: 0.8;">Note: You can only save once per day</p>
+                </div>
+
+                <!-- Admin Delete Section (Only visible to admin) -->
+                <div id="adminDeleteSection" class="hidden" style="margin-top: 20px;">
+                    <h4 style="color: #ff6b6b;">👑 Admin: Delete Participants (Any Day)</h4>
+                    <div id="adminDeleteList"></div>
+                </div>
+            </div>
+
+            <!-- Admin Panel Section -->
+            <div id="adminSection" class="quiz-section section">
+                <div class="admin-panel">
+                    <h3>📊 Statistics (29 Days)</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalUsers">0</div>
+                            <div>Total Participants</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalAttempts">0</div>
+                            <div>Total Quiz Attempts</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="avgScore">0</div>
+                            <div>Average Score</div>
+                        </div>
+                    </div>
+
+                    <div class="admin-section">
+                        <h4>➕ Add Question (1 Mark Each)</h4>
+                        <input type="text" id="newCategory" class="admin-input" placeholder="Category">
+                        <textarea id="newQuestion" class="admin-input" placeholder="Question" rows="2"></textarea>
+                        <input type="text" id="newOptionA" class="admin-input" placeholder="Option A">
+                        <input type="text" id="newOptionB" class="admin-input" placeholder="Option B">
+                        <input type="text" id="newOptionC" class="admin-input" placeholder="Option C">
+                        <input type="text" id="newAnswer" class="admin-input" placeholder="Correct Answer (A/B/C)">
+                        <textarea id="newExplanation" class="admin-input" placeholder="Explanation" rows="2"></textarea>
+                        <button class="admin-btn" onclick="addQuestion()">Add Question</button>
+                    </div>
+
+                    <div class="admin-section">
+                        <h4>📋 Manage Questions</h4>
+                        <div id="questionsList"></div>
+                    </div>
+
+                    <button class="admin-btn danger" onclick="resetAllData()">⚠️ Reset All Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Storage
+        let questions = [
+            {
+                id: 1,
+                category: "Quran",
+                question: "How many Surahs are in the Quran?",
+                options: ["A: 110", "B: 114", "C: 120"],
+                answer: "B",
+                explanation: "The Quran contains 114 Surahs"
+            },
+            {
+                id: 2,
+                category: "Hadith",
+                question: "Who is the author of Sahih Bukhari?",
+                options: ["A: Imam Muslim", "B: Imam Bukhari", "C: Imam Ahmad"],
+                answer: "B",
+                explanation: "Imam Muhammad al-Bukhari compiled Sahih Bukhari"
+            },
+            {
+                id: 3,
+                category: "Ramadan",
+                question: "How many days does Ramadan last?",
+                options: ["A: 28-29 days", "B: 29-30 days", "C: 30-31 days"],
+                answer: "B",
+                explanation: "Ramadan lasts for 29 or 30 days"
+            }
+        ];
+
+        // Scores structure for 29 days
+        let scores = {
+            days: {} // Will store scores for each day (1-29)
+        };
+
+        // Track user attempts per day
+        let userAttempts = {};
+
+        let currentUser = {
+            name: '',
+            isAdmin: false,
+            loggedIn: false
+        };
+
+        let currentQuestionIndex = 0;
+        let userScore = 0;
+        let totalScore = 0;
+        let selectedOption = null;
+        let timerInterval = null;
+        let seconds = 0;
+        const TOTAL_QUIZ_TIME = 30 * 60; // 30 minutes
+        let timeLeft = TOTAL_QUIZ_TIME;
+        let currentDay = 1; // Track current Ramadan day (1-29)
+        let hasTakenToday = false;
+
+        // Load data from localStorage
+        function loadData() {
+            const savedQuestions = localStorage.getItem('questions');
+            const savedScores = localStorage.getItem('scores');
+            const savedAttempts = localStorage.getItem('userAttempts');
+            
+            if (savedQuestions) questions = JSON.parse(savedQuestions);
+            if (savedScores) scores = JSON.parse(savedScores);
+            if (savedAttempts) userAttempts = JSON.parse(savedAttempts);
+            
+            // Initialize days if needed
+            if (!scores.days) {
+                scores.days = {};
+                for (let i = 1; i <= 29; i++) {
+                    scores.days[i] = [];
+                }
+            }
+            
+            // Calculate current day based on start date or stored value
+            calculateCurrentDay();
+        }
+
+        // Calculate current Ramadan day (simulated)
+        function calculateCurrentDay() {
+            const startDate = localStorage.getItem('ramadanStartDate');
+            if (startDate) {
+                const start = new Date(startDate);
+                const today = new Date();
+                const diffTime = Math.abs(today - start);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                currentDay = Math.min(diffDays, 29);
+            } else {
+                // Default to day 1
+                localStorage.setItem('ramadanStartDate', new Date().toISOString());
+                currentDay = 1;
+            }
+            document.getElementById('currentDayNumber').textContent = currentDay;
+            document.getElementById('leaderboardDay').textContent = currentDay;
+            document.getElementById('saveDay').textContent = currentDay;
+            document.getElementById('currentDay').textContent = `Day ${currentDay}`;
+            
+            // Format date
+            const date = new Date();
+            document.getElementById('currentDate').textContent = 
+                `${currentDay} Ramadan ${date.getFullYear()}`;
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('questions', JSON.stringify(questions));
+            localStorage.setItem('scores', JSON.stringify(scores));
+            localStorage.setItem('userAttempts', JSON.stringify(userAttempts));
+        }
+
+        // Timer functions
+        function startTimer() {
+            timeLeft = TOTAL_QUIZ_TIME;
+            updateTimerDisplay();
+            
+            if (timerInterval) clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                // Add warning class when less than 5 minutes left
+                if (timeLeft <= 300) { // 5 minutes = 300 seconds
+                    document.getElementById('timer').classList.add('warning');
+                }
+                
+                // Auto-submit when time expires
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer').classList.add('expired');
+                    document.getElementById('timer').classList.remove('warning');
+                    handleTimeExpired();
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timeLeft / 60);
+            const secs = timeLeft % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function handleTimeExpired() {
+            alert('⏰ Time is up! Your quiz has been submitted automatically.');
+            if (!hasTakenToday && userScore > 0) {
+                saveScore();
+            }
+        }
+
+        // Check if user has taken today's quiz
+        function checkTodayAttempt() {
+            if (!currentUser.loggedIn || currentUser.isAdmin) return false;
+            
+            const userKey = `${currentUser.name}_day_${currentDay}`;
+            hasTakenToday = userAttempts[userKey] || false;
+            
+            const warningElement = document.getElementById('alreadyTakenWarning');
+            const saveSection = document.getElementById('saveScoreSection');
+            const submitBtn = document.getElementById('submitBtn');
+            const options = document.querySelectorAll('.option');
+            
+            if (hasTakenToday) {
+                warningElement.classList.remove('hidden');
+                document.getElementById('nextDayNumber').textContent = currentDay + 1;
+                saveSection.classList.add('hidden');
+                submitBtn.disabled = true;
+                options.forEach(opt => opt.classList.add('disabled'));
+            } else {
+                warningElement.classList.add('hidden');
+                saveSection.classList.remove('hidden');
+                submitBtn.disabled = false;
+                options.forEach(opt => opt.classList.remove('disabled'));
+            }
+            
+            return hasTakenToday;
+        }
+
+        // Login functions
+        function handleUserLogin() {
+            const name = document.getElementById('loginName').value.trim();
+            if (!name) {
+                alert('Please enter your name!');
+                return;
+            }
+            
+            currentUser = {
+                name: name,
+                isAdmin: false,
+                loggedIn: true
+            };
+            
+            // Check if user has taken today's quiz
+            checkTodayAttempt();
+            
+            // Load user's total score
+            loadUserTotalScore();
+            
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('displayName').textContent = name;
+            
+            startTimer();
+            loadQuestion();
+            updateLeaderboardDisplay();
+        }
+
+        function handleAdminLogin() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === 'admin2024') {
+                const name = 'Admin';
+                currentUser = {
+                    name: name,
+                    isAdmin: true,
+                    loggedIn: true
+                };
+                
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                document.getElementById('displayName').textContent = name + ' (Admin)';
+                document.getElementById('adminBadge').classList.remove('hidden');
+                document.getElementById('adminTab').classList.remove('hidden');
+                document.getElementById('adminDeleteSection').classList.remove('hidden');
+                
+                startTimer();
+                loadQuestion();
+                updateLeaderboardDisplay();
+                updateAdminStats();
+            } else {
+                alert('Invalid admin password!');
+            }
+        }
+
+        function logout() {
+            stopTimer();
+            currentUser.loggedIn = false;
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('adminBadge').classList.add('hidden');
+            document.getElementById('adminTab').classList.add('hidden');
+            document.getElementById('adminDeleteSection').classList.add('hidden');
+            document.getElementById('loginName').value = 'Guest User';
+            document.getElementById('adminPassword').value = '';
+        }
+
+        // Load user's total score across all days
+        function loadUserTotalScore() {
+            totalScore = 0;
+            for (let day = 1; day <= 29; day++) {
+                const dayScores = scores.days[day] || [];
+                const userDayScore = dayScores.find(s => s.name === currentUser.name);
+                if (userDayScore) {
+                    totalScore += userDayScore.score;
+                }
+            }
+            document.getElementById('totalScore').textContent = totalScore;
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            
+            if (tabName === 'quiz') {
+                document.querySelector('.tab').classList.add('active');
+                document.getElementById('quizSection').classList.add('active');
+                checkTodayAttempt();
+            } else if (tabName === 'leaderboard') {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('leaderboardSection').classList.add('active');
+                updateLeaderboardDisplay();
+            } else if (tabName === 'admin' && currentUser.isAdmin) {
+                document.querySelectorAll('.tab')[2].classList.add('active');
+                document.getElementById('adminSection').classList.add('active');
+                updateAdminStats();
+                displayQuestionsList();
+            }
+        }
+
+        // Quiz functions
+        function loadQuestion() {
+            if (questions.length === 0) {
+                document.getElementById('questionText').textContent = 'No questions available. Please add questions in admin panel.';
+                return;
+            }
+            
+            const question = questions[currentQuestionIndex];
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('questionCount').textContent = `${currentQuestionIndex + 1}/${questions.length}`;
+            
+            let optionsHtml = '';
+            question.options.forEach(option => {
+                optionsHtml += `<div class="option" onclick="selectOption('${option.charAt(0)}', this)">${option}</div>`;
+            });
+            document.getElementById('optionsContainer').innerHTML = optionsHtml;
+            
+            if (hasTakenToday) {
+                document.querySelectorAll('.option').forEach(opt => opt.classList.add('disabled'));
+            }
+            
+            document.getElementById('submitBtn').classList.remove('hidden');
+            document.getElementById('nextBtn').classList.add('hidden');
+            selectedOption = null;
+        }
+
+        function selectOption(option, element) {
+            if (hasTakenToday) return;
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedOption = option;
+        }
+
+        function submitAnswer() {
+            if (hasTakenToday) {
+                alert('You have already taken today\'s quiz!');
+                return;
+            }
+            
+            if (!selectedOption) {
+                alert('Please select an answer!');
+                return;
+            }
+            
+            const question = questions[currentQuestionIndex];
+            if (selectedOption === question.answer) {
+                userScore += 1; // 1 Mark per question
+                document.getElementById('currentScore').textContent = userScore;
+            }
+            
+            document.getElementById('submitBtn').classList.add('hidden');
+            document.getElementById('nextBtn').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                document.getElementById('questionText').textContent = '🎉 Quiz Completed! Save your score in the Leaderboard.';
+                document.getElementById('optionsContainer').innerHTML = '';
+                document.getElementById('nextBtn').classList.add('hidden');
+            }
+        }
+
+        // Save score (once per day)
+        function saveScore() {
+            if (hasTakenToday) {
+                alert('You have already saved your score for today!');
+                return;
+            }
+            
+            const userKey = `${currentUser.name}_day_${currentDay}`;
+            
+            // Mark as taken
+            userAttempts[userKey] = true;
+            hasTakenToday = true;
+            
+            // Save score for this day
+            const scoreEntry = {
+                name: currentUser.name,
+                score: userScore,
+                day: currentDay,
+                date: new Date().toLocaleDateString()
+            };
+            
+            // Check if user already has a score for this day
+            const existingIndex = scores.days[currentDay].findIndex(s => s.name === currentUser.name);
+            if (existingIndex !== -1) {
+                scores.days[currentDay][existingIndex].score = userScore;
+            } else {
+                scores.days[currentDay].push(scoreEntry);
+            }
+            
+            // Update total score
+            totalScore += userScore;
+            document.getElementById('totalScore').textContent = totalScore;
+            
+            saveData();
+            updateLeaderboardDisplay();
+            checkTodayAttempt();
+            
+            alert(`✅ Score saved for Day ${currentDay}! Come back tomorrow.`);
+        }
+
+        // Leaderboard functions
+        function updateLeaderboardDisplay() {
+            // Today's leaders
+            let todayHtml = '';
+            const todayScores = scores.days[currentDay] || [];
+            
+            if (todayScores.length === 0) {
+                todayHtml = '<p>No scores for today yet</p>';
+            } else {
+                todayScores.sort((a, b) => b.score - a.score).forEach((score, index) => {
+                    todayHtml += `
+                        <div class="leaderboard-entry">
+                            <div>${index + 1}. ${score.name}</div>
+                            <div>
+                                <span style="color: #ffd700; font-weight: bold;">${score.score} marks</span>
+                                ${currentUser.isAdmin ? `<button class="delete-name-btn" onclick="deleteScore('${score.name}', ${currentDay})">Delete</button>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('todayLeaderboard').innerHTML = todayHtml;
+
+            // Previous days (combine all days except today)
+            let previousHtml = '';
+            let allPreviousScores = [];
+            
+            for (let day = 1; day <= 29; day++) {
+                if (day !== currentDay) {
+                    const dayScores = scores.days[day] || [];
+                    dayScores.forEach(score => {
+                        allPreviousScores.push({
+                            ...score,
+                            displayDay: day
+                        });
+                    });
+                }
+            }
+            
+            allPreviousScores.sort((a, b) => b.score - a.score);
+            
+            if (allPreviousScores.length === 0) {
+                previousHtml = '<p>No previous scores</p>';
+            } else {
+                allPreviousScores.forEach((score, index) => {
+                    previousHtml += `
+                        <div class="leaderboard-entry">
+                            <div>${index + 1}. ${score.name} (Day ${score.displayDay})</div>
+                            <div>
+                                <span style="color: #ffd700; font-weight: bold;">${score.score} marks</span>
+                                ${currentUser.isAdmin ? `<button class="delete-name-btn" onclick="deleteScore('${score.name}', ${score.displayDay})">Delete</button>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('previousLeaderboard').innerHTML = previousHtml;
+
+            if (currentUser.isAdmin) {
+                updateAdminDeleteList();
+            }
+        }
+
+        // Delete score (Admin only)
+        function deleteScore(name, day) {
+            if (!currentUser.isAdmin) return;
+            
+            if (confirm(`Delete ${name}'s score from Day ${day}?`)) {
+                scores.days[day] = scores.days[day].filter(s => s.name !== name);
+                
+                // Also remove from attempts
+                const userKey = `${name}_day_${day}`;
+                delete userAttempts[userKey];
+                
+                saveData();
+                updateLeaderboardDisplay();
+                updateAdminStats();
+                
+                if (currentUser.name === name) {
+                    loadUserTotalScore();
+                }
+            }
+        }
+
+        // Admin functions
+        function updateAdminDeleteList() {
+            let html = '';
+            for (let day = 1; day <= 29; day++) {
+                const dayScores = scores.days[day] || [];
+                dayScores.forEach(score => {
+                    html += `
+                        <div class="leaderboard-entry">
+                            <div>Day ${day}: ${score.name} - ${score.score} marks</div>
+                            <button class="delete-name-btn" onclick="deleteScore('${score.name}', ${day})">Delete</button>
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('adminDeleteList').innerHTML = html || '<p>No participants yet</p>';
+        }
+
+        function updateAdminStats() {
+            let totalParticipants = 0;
+            let totalAttempts = 0;
+            let totalScoreSum = 0;
+            
+            for (let day = 1; day <= 29; day++) {
+                const dayScores = scores.days[day] || [];
+                totalParticipants += new Set(dayScores.map(s => s.name)).size;
+                totalAttempts += dayScores.length;
+                dayScores.forEach(s => totalScoreSum += s.score);
+            }
+            
+            const avgScore = totalAttempts > 0 ? (totalScoreSum / totalAttempts).toFixed(1) : 0;
+            
+            document.getElementById('totalUsers').textContent = totalParticipants;
+            document.getElementById('totalAttempts').textContent = totalAttempts;
+            document.getElementById('avgScore').textContent = avgScore;
+        }
+
+        function addQuestion() {
+            const category = document.getElementById('newCategory').value;
+            const question = document.getElementById('newQuestion').value;
+            const optionA = document.getElementById('newOptionA').value;
+            const optionB = document.getElementById('newOptionB').value;
+            const optionC = document.getElementById('newOptionC').value;
+            const answer = document.getElementById('newAnswer').value.toUpperCase();
+            const explanation = document.getElementById('newExplanation').value;
+
+            if (!category || !question || !optionA || !optionB || !optionC || !answer || !explanation) {
+                alert('Please fill all fields!');
+                return;
+            }
+
+            if (!['A', 'B', 'C'].includes(answer)) {
+                alert('Answer must be A, B, or C!');
+                return;
+            }
+
+            const newQuestion = {
+                id: questions.length + 1,
+                category: category,
+                question: question,
+                options: [`A: ${optionA}`, `B: ${optionB}`, `C: ${optionC}`],
+                answer: answer,
+                explanation: explanation
+            };
+
+            questions.push(newQuestion);
+            saveData();
+            displayQuestionsList();
+            
+            // Clear inputs
+            document.getElementById('newCategory').value = '';
+            document.getElementById('newQuestion').value = '';
+            document.getElementById('newOptionA').value = '';
+            document.getElementById('newOptionB').value = '';
+            document.getElementById('newOptionC').value = '';
+            document.getElementById('newAnswer').value = '';
+            document.getElementById('newExplanation').value = '';
+            
+            alert('Question added successfully!');
+        }
+
+        function displayQuestionsList() {
+            let html = '';
+            questions.forEach((q, index) => {
+                html += `
+                    <div class="leaderboard-entry">
+                        <div>${index + 1}. ${q.question.substring(0, 50)}...</div>
+                        <button class="delete-name-btn" onclick="deleteQuestion(${q.id})">Delete</button>
+                    </div>
+                `;
+            });
+            document.getElementById('questionsList').innerHTML = html || '<p>No questions</p>';
+        }
+
+        function deleteQuestion(id) {
+            if (confirm('Delete this question?')) {
+                questions = questions.filter(q => q.id !== id);
+                saveData();
+                displayQuestionsList();
+                
+                // Reset current question index if needed
+                if (currentQuestionIndex >= questions.length) {
+                    currentQuestionIndex = 0;
+                    loadQuestion();
+                }
+            }
+        }
+
+        function resetAllData() {
+            if (confirm('⚠️ Are you sure? This will delete ALL data for all 29 days!')) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        // Initialize
+        loadData();
+    </script>
+</body>
+</html>
